@@ -40,7 +40,7 @@ function init() {
     // Load texture
     const textureLoader = new THREE.TextureLoader();
     textureLoader.load(
-        'aquarium-scene.png',
+        'aquarium-scene.png?url',
         function (texture) {
             console.log('✅ Texture loaded successfully:', texture);
 
@@ -73,7 +73,7 @@ function init() {
 // Load GLTF Model and Apply Texture
 function loadGLTFModel(texture) {
     const loader = new GLTFLoader();
-    loader.load('aquarium-scene.glb', function (gltf) {
+    loader.load('aquarium-scene.glb?url', function (gltf) {
         console.log('✅ GLTF model loaded successfully');
         const model = gltf.scene;
         scene.add(model);
