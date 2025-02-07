@@ -5,7 +5,7 @@ import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { KTX2Loader } from 'three/addons/loaders/KTX2Loader.js';
 import { MeshoptDecoder } from 'three/addons/libs/meshopt_decoder.module.js';
 
-let camera, scene, renderer;
+let camera, scene, renderer, controls;  // ✅ Declaring controls globally
 
 init();
 render();
@@ -21,7 +21,12 @@ function init() {
     renderer.toneMappingExposure = 1;
     container.appendChild(renderer.domElement);
 
-    camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 2000);
+    camera = new THREE.PerspectiveCamera(
+        45,
+        window.innerWidth / window.innerHeight,
+        0.4, // Fix near clipping
+        5000000  // Fix far clipping
+    );
     camera.position.set(0, 100, 0);
 
     const environment = new RoomEnvironment(renderer);
@@ -32,66 +37,77 @@ function init() {
     scene.environment = pmremGenerator.fromScene(environment).texture;
     environment.dispose();
 
-    // const grid = new THREE.GridHelper(500, 10, 0xffffff, 0xffffff);
-    // grid.material.opacity = 0.5;
-    // grid.material.depthWrite = false;
-    // grid.material.transparent = true;
-    // scene.add(grid);
-
-    const ktx2Loader = new KTX2Loader()
-        .setTranscoderPath('jsm/libs/basis/')
-        .detectSupport(renderer);
-
     // Load texture
     const textureLoader = new THREE.TextureLoader();
-    const texture = textureLoader.load('aquarium-scene.png'); // Replace with your texture file
+    textureLoader.load(
+        'aquarium-scene.png',
+        function (texture) {
+            console.log('✅ Texture loaded successfully:', texture);
 
-    // Load GLTF Model
-    const loader = new GLTFLoader();
-    loader.setKTX2Loader(ktx2Loader);
-    loader.setMeshoptDecoder(MeshoptDecoder);
-    loader.load('aquarium-scene.glb', function (gltf) {
-        const model = gltf.scene;
-        model.position.set(0, 0, 0);
-        model.scale.set(5,5,5);
-    
-        // Apply texture to all materials
-        model.traverse((child) => {
-            if (child.isMesh) {
-                const geometry = child.geometry;
-                if (!geometry.attributes.uv) {
-                    console.warn('No UV coordinates found for', child);
-                    return;
-                }
-    
-                // // Ensure UV coordinates exist
-                // console.log('UV Mapping:', geometry.attributes.uv.array);
-    
-                // Assign texture to material
-                child.material.map = texture;
-                child.material.needsUpdate = true;
-    
-                // Adjust texture settings
-                texture.wrapS = THREE.RepeatWrapping;
-                texture.wrapT = THREE.RepeatWrappingZ;
-                texture.repeat.set(1, 1); // Change these values if needed to scale texture
-            }
-        });
-    
-        scene.add(model);
-        render();
-    });
-    
-    
+            // Fix potential flipping issues
+            texture.flipY = false;
+            texture.wrapS = THREE.RepeatWrapping;
+            texture.wrapT = THREE.RepeatWrapping;
+            texture.repeat.set(1, 1); // Adjust for proper scaling
 
-    const controls = new OrbitControls(camera, renderer.domElement);
+            // Load GLTF Model after texture is loaded
+            loadGLTFModel(texture);
+        },
+        undefined,
+        function (error) {
+            console.error('❌ Error loading texture:', error);
+        }
+    );
+
+    // ✅ Initialize controls globally
+    controls = new OrbitControls(camera, renderer.domElement);
     controls.addEventListener('change', render);
-    controls.minDistance = 400;
-    controls.maxDistance = 1000;
+    controls.minDistance = 10;
+    controls.maxDistance = 600000;
     controls.target.set(10, 90, -16);
     controls.update();
 
     window.addEventListener('resize', onWindowResize);
+}
+
+// Load GLTF Model and Apply Texture
+function loadGLTFModel(texture) {
+    const loader = new GLTFLoader();
+    loader.load('aquarium-scene.glb', function (gltf) {
+        console.log('✅ GLTF model loaded successfully');
+        const model = gltf.scene;
+        scene.add(model);
+
+        // Apply texture to all meshes
+        model.traverse((child) => {
+            if (child.isMesh) {
+                if (child.material.map) {
+                    console.log(`🎨 Replacing existing texture on: ${child.name}`);
+                }
+                child.material.map = texture;
+                child.material.needsUpdate = true;
+                child.material.depthTest = true;
+                child.material.depthWrite = true;
+
+            }
+        });
+
+        // Center model
+        const box = new THREE.Box3().setFromObject(model);
+        const center = box.getCenter(new THREE.Vector3());
+        model.position.sub(center);
+
+        // ✅ Adjust camera and controls using globally defined `controls`
+        camera.lookAt(center);
+        controls.target.copy(center);
+        controls.update();
+
+        render();
+    },
+        undefined,
+        function (error) {
+            console.error('❌ Error loading GLTF model:', error);
+        });
 }
 
 function onWindowResize() {
