@@ -1,6 +1,6 @@
-# aquarium-building
+# store register
 
-## Install Three.js
+## How to Install
 
 # three.js
 npm install --save three
@@ -8,18 +8,21 @@ npm install --save three
 # vite
 npm install --save-dev vite
 
-# Run dev server
+## Run dev server
 
 npx vite
+
+## Requirements to Build
+
+- [ ] `npm install -g gh-pages`
+- [ ] `?url` added to glb file references
 
 ## Push to Production
 
 `npx vite build`
 
-builds 
 
-**make sure to update relative path with . in index.html**
+## Publish on Pages
 
 `npm run deploy`
 
-runs deploy script to gh-pages branch
