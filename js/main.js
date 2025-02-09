@@ -27,7 +27,7 @@ function init() {
         0.4, // Fix near clipping
         5000000  // Fix far clipping
     );
-    camera.position.set(0, 100, 0);
+    camera.position.set(90, 10, 200);
 
     const environment = new RoomEnvironment(renderer);
     const pmremGenerator = new THREE.PMREMGenerator(renderer);
