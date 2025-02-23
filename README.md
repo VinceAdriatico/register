@@ -78,10 +78,12 @@ function animate() {
 
 ### Pushing to Production
 
-- [ ] `?url` added to glb and texture file referencespath
+*Need to revert this when on dev**
+
+- [ ] `?url` added to glb and texture file references path
+- [ ] `.` add to frames path for relative
 - [ ] `npx vite build`
 - [ ] `./index.html` in `distr` directory for relative 
-
 
 ## Publish on Pages
 

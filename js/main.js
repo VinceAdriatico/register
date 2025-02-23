@@ -158,12 +158,12 @@ function loadAdditionalModel() {
 // Animate Texture Frames
 function setupAnimation(televisionScreen) {
     let frameIndex = 0;
-    const totalFrames = 100; // Adjust based on actual frame count
+    const totalFrames = 80; // Adjust based on actual frame count
     const frameRate = 30; // Frames per second
     const textureLoader = new THREE.TextureLoader();
 
     function updateTexture() {
-        const framePath = `/animate/television_ad/television_ad_${String(frameIndex).padStart(5, '0')}.jpg?url`;
+        const framePath = `./animate/television_ad/television_ad_${String(frameIndex).padStart(5, '0')}.jpg?url`;
 
         textureLoader.load(framePath, function (texture) {
             texture.flipY = false; // Fix upside-down animation
