@@ -83,7 +83,7 @@ function animate() {
 - [ ] `?url` added to glb and texture file references path
 - [ ] `.` add to frames path for relative
 - [ ] `npx vite build`
-- [ ] `./index.html` in `distr` directory for relative 
+- [ ] `./assets/index.hjtml` in `distr/index.html` directory for relative 
 
 ## Publish on Pages
 
