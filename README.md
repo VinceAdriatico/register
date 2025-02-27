@@ -89,3 +89,44 @@ function animate() {
 
 `npm run deploy`
 
+
+## TO-DO
+
+- [ ] Refactor code into modules [import]
+- [ ] Create interface that dynamically changes position of additional models
+- [ ] Light Channels
+- [ ] Three.JS Color Textures (for dynamic models and lights)
+
+```js
+// utils.js
+export function sayHello() {
+    console.log("Hello from utils.js!");
+}
+
+```
+```js
+// main.js
+import { sayHello } from './utils.js';
+
+sayHello(); // Outputs: Hello from utils.js!
+
+```
+
+- [ ] Create modules from commonly used functions (*e.g. loading modules with position*)
+
+```js
+// utils.js (Module File)
+export function greet(name) {
+    console.log(`Hello, ${name}!`);
+}
+```
+```js
+// main.js
+import { greet } from './utils.js';
+
+const userName = "John";
+greet(userName); // Outputs: Hello, John!
+
+```
+
+
