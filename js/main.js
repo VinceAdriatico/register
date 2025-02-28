@@ -12,7 +12,7 @@ let televisionScreen, textureLoader;
 let frameIndex = 0;
 const totalFrames = 100;
 const frameRate = 30;
-let animationInterval;
+let animationTimeout = null;
 let currentAnimation = 'television_ad';
 let alternateAnimation = 'television_ad_2';
 
@@ -150,10 +150,16 @@ function loadAdditionalModel() {
 }
 
 function setupAnimation(televisionScreen) {
+    if (!televisionScreen) return;
+    if (animationTimeout) {
+        clearTimeout(animationTimeout);
+    }
+
     let frameIndex = 0;
     const totalFrames = 80;
     const frameRate = 30;
     const textureLoader = new THREE.TextureLoader();
+    let currentTexture = null;
 
     function updateTexture() {
         const framePath = `./animate/${currentAnimation}/${currentAnimation}_${String(frameIndex).padStart(5, '0')}.jpg?url`;
@@ -162,6 +168,12 @@ function setupAnimation(televisionScreen) {
             texture.flipY = false;
             texture.needsUpdate = true;
 
+            // Dispose of the previous texture
+            if (currentTexture) {
+                currentTexture.dispose();
+            }
+            currentTexture = texture;
+
             televisionScreen.material.map = texture;
             televisionScreen.material.needsUpdate = true;
 
@@ -169,13 +181,14 @@ function setupAnimation(televisionScreen) {
         });
 
         frameIndex = (frameIndex + 1) % totalFrames;
-        setTimeout(updateTexture, 1000 / frameRate);
+        animationTimeout = setTimeout(updateTexture, 1000 / frameRate);
     }
 
     updateTexture();
 }
 
-function onPodiumClick() {
+// Click event handler to toggle animations on the television
+function onTelevisionClick() {
     currentAnimation = currentAnimation === 'television_ad' ? 'television_ad_2' : 'television_ad';
     setupAnimation(televisionScreen);
 }
@@ -191,8 +204,8 @@ document.addEventListener('click', function (event) {
     const intersects = raycaster.intersectObjects(scene.children, true);
     
     for (let i = 0; i < intersects.length; i++) {
-        if (intersects[i].object.name.includes('Podium')) {
-            onPodiumClick();
+        if (televisionScreen && intersects[i].object === televisionScreen) {
+            onTelevisionClick();
             break;
         }
     }
