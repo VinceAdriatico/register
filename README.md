@@ -130,3 +130,12 @@ greet(userName); // Outputs: Hello, John!
 ```
 
 
+## References
+
+Adjusting the Camera Position
+
+Modify the x, y, z values to place the camera at a different position. For example:
+
+    Move the camera closer → Decrease the z value.
+    Move the camera higher → Increase the y value.
+    Move the camera to the side → Adjust the x value.

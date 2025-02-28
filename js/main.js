@@ -37,7 +37,7 @@ function init() {
         5000000
     );
     
-    camera.position.set(-10, -10, 100);
+    camera.position.set(80, 30, 200);
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xbbbbbb);
@@ -63,7 +63,7 @@ function init() {
     controls.addEventListener('change', render);
     controls.minDistance = 10;
     controls.maxDistance = 600000;
-    controls.target.set(10, 90, -16);
+    controls.target.set(20, 90, -16);
     controls.update();
 
     loadPodiumModel();
