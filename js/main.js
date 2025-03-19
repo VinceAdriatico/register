@@ -37,7 +37,7 @@ function init() {
         5000000
     );
     
-    camera.position.set(80, 30, 200);
+    camera.position.set(79, -13, 88);
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xbbbbbb);
@@ -60,7 +60,9 @@ function init() {
     );
 
     controls = new OrbitControls(camera, renderer.domElement);
-    controls.addEventListener('change', render);
+    controls.addEventListener('change', () => {
+        // console.log(`Camera Position: ${camera.position.x.toFixed(0)}, ${camera.position.y.toFixed(0)}, ${camera.position.z.toFixed(0)}`);
+    });
     controls.minDistance = 10;
     controls.maxDistance = 600000;
     controls.target.set(20, 90, -16);
