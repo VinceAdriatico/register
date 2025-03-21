@@ -37,7 +37,7 @@ function init() {
         5000000
     );
     
-    camera.position.set(79, -13, 88);
+    camera.position.set(139, 11, 155);
 
     scene = new THREE.Scene();
     scene.background = new THREE.Color(0xbbbbbb);
@@ -61,14 +61,14 @@ function init() {
 
     controls = new OrbitControls(camera, renderer.domElement);
     controls.addEventListener('change', () => {
-        // console.log(`Camera Position: ${camera.position.x.toFixed(0)}, ${camera.position.y.toFixed(0)}, ${camera.position.z.toFixed(0)}`);
+        console.log(`Camera Position: ${camera.position.x.toFixed(0)}, ${camera.position.y.toFixed(0)}, ${camera.position.z.toFixed(0)}`);
     });
     controls.minDistance = 10;
     controls.maxDistance = 600000;
     controls.target.set(20, 90, -16);
     controls.update();
 
-    loadPodiumModel();
+
     window.addEventListener('resize', onWindowResize);
 }
 
@@ -102,23 +102,6 @@ function loadGLTFModel(texture) {
         undefined,
         function (error) {
             console.error('Error loading GLTF model:', error);
-        }
-    );
-}
-
-function loadPodiumModel() {
-    const loader = new GLTFLoader();
-    loader.load(
-        'Podium.glb?url',
-        function (gltf) {
-            const model = gltf.scene;
-            scene.add(model);
-            model.position.set(-10, -17, 60);
-            model.scale.set(3, 3, 3);
-        },
-        undefined,
-        function (error) {
-            console.error('Error loading podium model:', error);
         }
     );
 }
